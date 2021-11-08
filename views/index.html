@@ -42,7 +42,7 @@
         <div class="row">
                 <div class="col col-md-4">
                         <div class="body">
-                                
+
                         </div>
 
                 </div>
@@ -113,25 +113,23 @@
                         ]
                 };
 
+                var data = jsonData;
 
-                d3.json("/ajschumacher/raw/65eda1df2b0dd2cf616f/structure.json", function (error, flare) {
-                        if (error) throw error;
+                root = data;
+                root.x0 = height / 2;
+                root.y0 = 0;
 
-                        root = flare;
-                        root.x0 = height / 2;
-                        root.y0 = 0;
-
-                        function collapse(d) {
-                                if (d.children) {
-                                        d._children = d.children;
-                                        d._children.forEach(collapse);
-                                        d.children = null;
-                                }
+                function collapse(d) {
+                        if (d.children) {
+                                d._children = d.children;
+                                d._children.forEach(collapse);
+                                d.children = null;
                         }
+                }
 
-                        root.children.forEach(collapse);
-                        update(root);
-                });
+                root.children.forEach(collapse);
+                update(root);
+
 
                 d3.select(self.frameElement).style("height", "480px");
 
