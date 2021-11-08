@@ -1,0 +1,23 @@
+{
+  "name": "d3-decision-tree",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BarbaraB97/D3-Decision-Tree.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BarbaraB97/D3-Decision-Tree/issues"
+  },
+  "homepage": "https://github.com/BarbaraB97/D3-Decision-Tree#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
