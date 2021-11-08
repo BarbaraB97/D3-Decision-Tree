@@ -8,328 +8,233 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
                 integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
                 crossorigin="anonymous">
-        <script src="//unpkg.com/brain.js"></script>
+
         <titile>
-                <h1>D3 Neural network demo</h1>
+                <h2>D3 Decision tree demo</h1>
         </titile>
 
 </head>
 
 
 <style>
-        text {
-                pointer-events: none;
+        .node {
+                cursor: pointer;
         }
 
-        .node:hover {
-                stroke: #999;
-                stroke-opacity: .6;
-                stroke-width: 4px;
+        .node circle {
+                fill: #fff;
+                stroke: steelblue;
+                stroke-width: 1.5px;
+        }
+
+        .node text {
+                font: 10px sans-serif;
         }
 
         .link {
-                stroke: #999;
-                stroke-opacity: .6;
-                
+                fill: none;
+                stroke: #ccc;
+                stroke-width: 1.5px;
         }
 </style>
 
 <body>
-
         <div class="row">
                 <div class="col col-md-4">
-                        </br> </br>
-                        <form>
-                                <div class="form-group">
-                                        <label>Number of input nodes:</label>
-                                        <input id="inputNodes" placeholder="Enter input nodes" onchange="readInput()">
-                                </div>
-                                <div class="form-group">
-                                        <label>Number of hidden nodes:</label>
-                                        <input id="hiddenNodes" placeholder="Enter hidden nodes"
-                                                onchange="readHidden()">
-                                </div>
-                                <div class="form-group">
-                                        <label>Number of hidden layers:</label>
-                                        <input id="hiddenLayers" placeholder="Enter hidden layers"
-                                                onchange="readHiddenLayers()">
-                                </div>
-                                <div class="form-group">
-                                        <label>Number of output nodes:</label>
-                                        <input id="outputNodes" placeholder="Enter output nodes"
-                                                onchange="readOutput()">
-                                </div>
-
-                                <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false"
-                                        autocomplete="off" onclick="createNetwork()">Generate neural network</button>
-
-                                <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false"
-                                        autocomplete="off" onclick="calculateOutput()">Predict</button>
-                         
-                        </form>
-                </div>
-
-                <div class="col col-md-4">
-                        <h4>Data:</h4></br>
-                        <table class="table" width="">
-                                <thead>
-                                        <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">feature1</th>
-                                                <th scope="col">feature2</th>
-                                                <th scope="col">output</th>
-                                        </tr>
-                                </thead>
-                                <tbody>
-                                        <tr>
-                                                <th></th>
-                                                <th>0</th>
-                                                <th>0</th>
-                                                <th>0</th>
-
-                                        </tr>
-                                        <tr>
-                                                <th></th>
-                                                <th>0</th>
-                                                <th>1</th>
-                                                <th>1</th>
-                                        </tr>
-                                        <tr>
-                                                <th></th>
-                                                <th>1</th>
-                                                <th>0</th>
-                                                <th>1</th>
-                                        </tr>
-                                        <tr>
-                                                <th></th>
-                                                <th>1</th>
-                                                <th>1</th>
-                                                <th>0</th>
-                                        </tr>
-                                </tbody>
-                        </table>
-                </div>
-                <div class="col col-md-4">
-                        <div class="container">
-                                <label>
-                                        <h4>Test on [1, 0]</h4>
-                                </label>
+                        <div class="body">
+                                
                         </div>
-                        </br>
-                        <div>
-                                <textarea cols="30" id="prediction" value="something" name=""></textarea>
-                        </div>
+
                 </div>
-
-
         </div>
 
-
-
-
-
-
-
-
-
-        <link rel="stylesheet" href="./css/bootstrap.min.css">
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
                 integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
                 crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
                 integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
                 crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-                integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
-                crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+
+
+
         <script>
-                function readInput() {
-                        var input = document.getElementById("inputNodes").value;
-                        console.log(input);
-                        return input;
-                }
-                function readHidden() {
-                        var hidden = document.getElementById("hiddenNodes").value;
-                        console.log(hidden);
-                        return hidden;
-                }
-                function readOutput() {
-                        var output = document.getElementById("outputNodes").value;
-                        console.log(output);
-                        return output;
-                }
-                function readHiddenLayers() {
-                        var output = document.getElementById("hiddenLayers").value;
-                        console.log(output);
-                        return output;
-                }
+                var margin = { top: 20, right: 120, bottom: 20, left: 180 },
+                        width = 960 - margin.right - margin.left,
+                        height = 480 - margin.top - margin.bottom;
+
+                var i = 0,
+                        duration = 750,
+                        root;
+                var tree = d3.layout.tree().size([height, width]);
+
+                var diagonal = d3.svg.diagonal().projection(function (d) { return [d.y, d.x]; });
+
+                var svg = d3.select("body").append("svg")
+                        .attr("width", width + margin.right + margin.left)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
+                var jsonData = {
+                        "name": "petal length (cm) > 2.45000004768",
+                        "children": [
+                                {
+                                        "name": "petal width (cm) > 1.75",
+                                        "children": [
+                                                {
+                                                        "name": "petal length (cm) > 4.85000038147",
+                                                        "children": [
+                                                                {
+                                                                        "name": "0 of setosa, 0 of versicolor, 43 of virginica"
+                                                                },
+                                                                {
+                                                                        "name": "0 of setosa, 1 of versicolor, 2 of virginica"
+                                                                }
+                                                        ]
+                                                },
+                                                {
+                                                        "name": "petal length (cm) > 4.94999980927",
+                                                        "children": [
+                                                                {
+                                                                        "name": "0 of setosa, 2 of versicolor, 4 of virginica"
+                                                                },
+                                                                {
+                                                                        "name": "0 of setosa, 47 of versicolor, 1 of virginica"
+                                                                }
+                                                        ]
+                                                }
+                                        ]
+                                },
+                                {
+                                        "name": "50 of setosa, 0 of versicolor, 0 of virginica"
+                                }
+                        ]
+                };
 
 
+                d3.json("/ajschumacher/raw/65eda1df2b0dd2cf616f/structure.json", function (error, flare) {
+                        if (error) throw error;
 
-        </script>
-        <script>
+                        root = flare;
+                        root.x0 = height / 2;
+                        root.y0 = 0;
 
-                let inputNodes;
-                let hiddenNodes;
-                let hiddenLayers;
-                let outputNodes;     
-                function createNetwork() {
-                        var width = 1200,
-                        height = 650,
-                        nodeSize = 30;
-
-                        var color = d3.scale.category20();
-
-                        var svg = d3.select("body").append("svg")
-                                .attr("width", width)
-                                .attr("height", height);
-
-
-                        inputNodes = readInput();
-                        hiddenNodes = readHidden();
-                        hiddenLayers = readHiddenLayers();
-                        outputNodes = readOutput();
-
-                        console.log(inputNodes);
-                        var data = [];
-                        for (let i = 0; i < inputNodes; i++) {
-                                data.push({
-                                        label: "i" + i,
-                                        layer: 1
-                                })
-                        }
-                        console.log(data);
-
-                        for (let j = 0; j < hiddenLayers; j++) {
-                                for (let i = 0; i < hiddenNodes; i++) {
-                                        data.push({
-                                                label: "h" + j + i,
-                                                layer: j + 2
-                                        })
+                        function collapse(d) {
+                                if (d.children) {
+                                        d._children = d.children;
+                                        d._children.forEach(collapse);
+                                        d.children = null;
                                 }
                         }
 
-                        for (let i = 0; i < outputNodes; i++) {
-                                data.push({
-                                        label: "o" + i,
-                                        layer: +hiddenLayers + +2
-                                })
-                        }
-                        console.log(data);
+                        root.children.forEach(collapse);
+                        update(root);
+                });
+
+                d3.select(self.frameElement).style("height", "480px");
+
+                function update(source) {
+
+                        //Compute the new tree layout.
+                        var nodes = tree.nodes(root).reverse(),
+                                links = tree.links(nodes);
+
+                        // Normalize for fixed-depth.
+                        nodes.forEach(function (d) { d.y = d.depth * 180; });
+
+                        // Update the nodes…
+                        var node = svg.selectAll("g.node")
+                                .data(nodes, function (d) { return d.id || (d.id = ++i); });
+
+                        // Enter any new nodes at the parent's previous position.
+                        var nodeEnter = node.enter().append("g")
+                                .attr("class", "node")
+                                .attr("transform", function (d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+                                .on("click", click);
+
+                        nodeEnter.append("circle")
+                                .attr("r", 1e-6)
+                                .style("fill", function (d) { return d._children ? "lightsteelblue" : "#fff"; });
+
+                        nodeEnter.append("text")
+                                .attr("x", function (d) { return d.children || d._children ? -10 : 10; })
+                                .attr("dy", ".35em")
+                                .attr("text-anchor", function (d) { return d.children || d._children ? "end" : "start"; })
+                                .text(function (d) { return d.name; })
+                                .style("fill-opacity", 1e-6);
+
+                        // Transition nodes to their new position.
+                        var nodeUpdate = node.transition()
+                                .duration(duration)
+                                .attr("transform", function (d) { return "translate(" + d.y + "," + d.x + ")"; });
+
+                        nodeUpdate.select("circle")
+                                .attr("r", 4.5)
+                                .style("fill", function (d) { return d._children ? "lightsteelblue" : "#fff"; });
+
+                        nodeUpdate.select("text")
+                                .style("fill-opacity", 1);
 
 
-                        var graph = {
-                                "nodes": data
-                        };
-                        console.log(graph.nodes);
+                        // Transition exiting nodes to the parent's new position.
+                        var nodeExit = node.exit().transition()
+                                .duration(duration)
+                                .attr("transform", function (d) { return "translate(" + source.y + "," + source.x + ")"; })
+                                .remove();
 
-                        var nodes = data;
+                        nodeExit.select("circle")
+                                .attr("r", 1e-6);
 
-                        var netsize = {};
-                        nodes.forEach(function (d) {
-                                if (d.layer in netsize) {
-                                        netsize[d.layer] += 1;
-                                } else {
-                                        netsize[d.layer] = 1;
-                                }
-                                d["lidx"] = netsize[d.layer];
-                        });
+                        nodeExit.select("text")
+                                .style("fill-opacity", 1e-6);
 
-                        // calc distances between nodes
-                        var largestLayerSize = Math.max.apply(
-                                null, Object.keys(netsize).map(function (i) { return netsize[i]; }));
+                        // Update the links…
+                        var link = svg.selectAll("path.link")
+                                .data(links, function (d) { return d.target.id; });
 
-                        var xdist = width / Object.keys(netsize).length,
-                                ydist = height / largestLayerSize;
-
-                        // create node locations
-                        nodes.map(function (d) {
-                                d["x"] = (d.layer - 0.5) * xdist;
-                                d["y"] = (d.lidx - 0.5) * ydist;
-                        });
-
-                        // autogenerate links
-                        var links = [];
-                        nodes.map(function (d, i) {
-                                for (var n in nodes) {
-                                        if (d.layer + 1 == nodes[n].layer) {
-                                                links.push({ "source": parseInt(i), "target": parseInt(n), "value": 1 })
-                                        }
-                                }
-                        }).filter(function (d) { return typeof d !== "undefined"; });
-
-                        // draw links
-                        var link = svg.selectAll(".link")
-                                .data(links)
-                                .enter().append("line")
+                        // Enter any new links at the parent's previous position.
+                        link.enter().insert("path", "g")
                                 .attr("class", "link")
-                                .attr("x1", function (d) { return nodes[d.source].x; })
-                                .attr("y1", function (d) { return nodes[d.source].y; })
-                                .attr("x2", function (d) { return nodes[d.target].x; })
-                                .attr("y2", function (d) { return nodes[d.target].y; })
-                                .style("stroke-width", function (d) { return Math.sqrt(d.value) }, "color", "red")
-
-                        svg.selectAll(".link").style("color", "red");
-
-                        // draw nodes
-                        var node = svg.selectAll(".node")
-                                .data(nodes)
-                                .enter().append("g")
-                                .attr("transform", function (d) {
-                                        return "translate(" + d.x + "," + d.y + ")";
+                                .attr("d", function (d) {
+                                        var o = { x: source.x0, y: source.y0 };
+                                        return diagonal({ source: o, target: o });
                                 });
 
-                        var circle = node.append("circle")
-                                .attr("class", "node")
-                                .attr("r", nodeSize)
-                                .style("fill", function (d) { return color(d.layer); })
-                               
+                        // Transition links to their new position.
+                        link.transition()
+                                .duration(duration)
+                                .attr("d", diagonal);
 
-                        node.append("text")
-                                .attr("dx", "-.35em")
-                                .attr("dy", ".35em")
-                                .text(function (d) { return d.label; });
+                        // Transition exiting nodes to the parent's new position.
+                        link.exit().transition()
+                                .duration(duration)
+                                .attr("d", function (d) {
+                                        var o = { x: source.x, y: source.y };
+                                        return diagonal({ source: o, target: o });
+                                })
+                                .remove();
 
-                        d3.selectAll(".node").transition().style("background-color", "black");
-                        
+                        // Stash the old positions for transition.
+                        nodes.forEach(function (d) {
+                                d.x0 = d.x;
+                                d.y0 = d.y;
+                        });
 
                 }
 
-                function calculateOutput() {
-                        hiddenLayersArr=[]; 
-                        for(let i=0; i<hiddenLayers; i++){
-                                hiddenLayersArr.push(+hiddenNodes);
+
+                // Toggle children on click.
+                function click(d) {
+                        if (d.children) {
+                                d._children = d.children;
+                                d.children = null;
+                        } else {
+                                d.children = d._children;
+                                d._children = null;
                         }
-                        console.log(hiddenLayersArr);
-                        const config = {
-                                hiddenLayers: hiddenLayersArr, // array of ints for the sizes of the hidden layers in the networ
-                        };
-                        const net = new brain.NeuralNetwork(config);
-                        const trainingData = [
-                                { input: [0, 0], output: { zero: 1 } },
-                                { input: [0, 1], output: { one: 1 } },
-                                { input: [1, 0], output: { one: 1 } },
-                                { input: [1, 1], output: { zero: 1 } },
-                        ]
-                        net.train(trainingData, {
-                                log: (error) => console.log(error),
-                                logPeriod: 10
-                        });
-
-                        const output = net.run([1, 0]); // [0.987]
-
-                        console.log("0:")
-                        console.log(output["zero"]);
-                        console.log("1:")
-                        console.log(output["one"]);
-
-
-                        var prediction = document.getElementById("prediction");
-                        prediction.innerHTML = "0: " + output["zero"] + "\n" + "1: " + output["one"] + "\n";
-
+                        update(d);
                 }
 
         </script>
