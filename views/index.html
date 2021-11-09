@@ -23,12 +23,12 @@
 
         .node circle {
                 fill: #fff;
-                stroke: steelblue;
+                stroke: rgb(64, 151, 221);
                 stroke-width: 1.5px;
         }
 
         .node text {
-                font: 10px sans-serif;
+                font: 13px sans-serif;
         }
 
         .link {
@@ -36,17 +36,22 @@
                 stroke: #ccc;
                 stroke-width: 1.5px;
         }
+
+        .link text {
+                font: 13px sans-serif;
+        }
 </style>
 
 <body>
         <div class="row">
                 <div class="col col-md-4">
-                        <div class="body">
+                        <div>
                                 <input type="file" name="" id="myfile">
 
                                 <div id="content"></div>
                                 <button onClick="loadData()" id="load" class="btn btn-md btn-primary">Load file</button>
-                                <button id="show" onClick="showDecisionTree()" class="btn btn-md btn-primary">Show tree</button>
+                                <button id="show" onClick="showDecisionTree()" class="btn btn-md btn-primary">Show
+                                        tree</button>
 
                         </div>
 
@@ -66,41 +71,43 @@
         <script>
 
                 var data = {
-                        "name": "petal length (cm) > 2.45000004768",
+                        "name": "Outlook -> Rainy | Overcast | Sunny",
                         "children": [
                                 {
-                                        "name": "petal width (cm) > 1.75",
+                                        "name": "Windy -> True | False",
+                                        "rule": "Rainy",
                                         "children": [
                                                 {
-                                                        "name": "petal length (cm) > 4.85000038147",
-                                                        "children": [
-                                                                {
-                                                                        "name": "0 of setosa, 0 of versicolor, 43 of virginica"
-                                                                },
-                                                                {
-                                                                        "name": "0 of setosa, 1 of versicolor, 2 of virginica"
-                                                                }
-                                                        ]
+                                                        "name": "NO",
+                                                        "rule": "True"
                                                 },
                                                 {
-                                                        "name": "petal length (cm) > 4.94999980927",
-                                                        "children": [
-                                                                {
-                                                                        "name": "0 of setosa, 2 of versicolor, 4 of virginica"
-                                                                },
-                                                                {
-                                                                        "name": "0 of setosa, 47 of versicolor, 1 of virginica"
-                                                                }
-                                                        ]
+                                                        "name": "YES",
+                                                        "rule": "False"
                                                 }
                                         ]
                                 },
                                 {
-                                        "name": "50 of setosa, 0 of versicolor, 0 of virginica"
+                                        "name": "YES",
+                                        "rule": "Overcast"
+                                },
+                                {
+                                        "name": "Humidity -> Normal | High",
+                                        "rule": "Sunny",
+                                        "children": [
+                                                {
+                                                        "name": "YES",
+                                                        "rule": "Normal"
+                                                },
+                                                {
+                                                        "name": "NO",
+                                                        "rule": "High"
+                                                }
+                                        ]
                                 }
                         ]
                 }
-                
+
                 //load data from file
                 function loadData() {
                         var file = document.getElementById('myfile').files[0];
@@ -113,9 +120,9 @@
                 }
 
                 function showDecisionTree() {
-                        var margin = { top: 20, right: 120, bottom: 20, left: 180 },
-                                width = 960 - margin.right - margin.left,
-                                height = 480 - margin.top - margin.bottom;
+                        var margin = { top: 20, right: 120, bottom: 20, left: 250 },
+                                width = 1000 - margin.right - margin.left,
+                                height = 650 - margin.top - margin.bottom;
 
                         var i = 0,
                                 duration = 750,
@@ -130,14 +137,12 @@
                                 .append("g")
                                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-                       // var data = loadData().then(console.log(data));
+                        // var data = loadData().then(console.log(data));
                         console.log("data: ");
-        
 
                         root = data;
                         root.x0 = height / 2;
                         root.y0 = 0;
-
 
                         function collapse(d) {
                                 if (d.children) {
@@ -151,13 +156,14 @@
                         update(root);
 
 
-                        d3.select(self.frameElement).style("height", "480px");
+                        d3.select(self.frameElement).style("height", "650px");
 
                         function update(source) {
 
                                 //Compute the new tree layout.
                                 var nodes = tree.nodes(root).reverse();
                                 var links = tree.links(nodes);
+                                console.log(links)
 
                                 // Normalize for fixed-depth.
                                 nodes.forEach(function (d) { d.y = d.depth * 180; });
@@ -189,7 +195,7 @@
                                         .attr("transform", function (d) { return "translate(" + d.y + "," + d.x + ")"; });
 
                                 nodeUpdate.select("circle")
-                                        .attr("r", 4.5)
+                                        .attr("r", 8)
                                         .style("fill", function (d) { return d._children ? "lightsteelblue" : "#fff"; });
 
                                 nodeUpdate.select("text")
@@ -211,7 +217,7 @@
                                 // Update the links…
                                 var link = svg.selectAll("path.link")
                                         .data(links, function (d) { return d.target.id; });
-
+          
                                 // Enter any new links at the parent's previous position.
                                 link.enter().insert("path", "g")
                                         .attr("class", "link")
@@ -233,6 +239,19 @@
                                                 return diagonal({ source: o, target: o });
                                         })
                                         .remove();
+
+
+                                //set text on links
+                                link.append("text")
+                                        .attr("font-family", "Arial, Helvetica, sans-serif")
+                                        .attr("fill", "Black")
+                                        .style("font", "normal 12px Arial")
+                                        .attr("text-anchor", "middle")
+                                        .text(function (d) {
+                                                console.log(d.target.rule);
+                                                return d.target.rule;
+                                        });
+
 
                                 // Stash the old positions for transition.
                                 nodes.forEach(function (d) {

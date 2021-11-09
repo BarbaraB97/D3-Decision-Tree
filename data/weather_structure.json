@@ -1,0 +1,38 @@
+{
+    "name": "Outlook -> Rainy | Overcast | Sunny",
+    "rule":null,
+    "children": [
+        {
+            "name": "Windy -> True | False",
+            "rule": "Rainy",
+            "children": [
+                {
+                    "name": "NO",
+                    "rule":"True"
+                },
+                {
+                    "name": "YES",
+                    "rule": "False"
+                }
+            ]
+        },
+        {
+            "name": "YES",
+            "rule": "Overcast"
+        },
+        {
+            "name": "Humidity -> Normal | High",
+            "rule": "Sunny",
+            "children": [
+                {
+                    "name": "YES",
+                    "rule":"Normal"
+                },
+                {
+                    "name": "NO",
+                    "rule":"High"
+                }
+            ]
+        }
+    ]
+}
