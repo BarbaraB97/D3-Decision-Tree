@@ -40,6 +40,18 @@
         .link text {
                 font: 13px sans-serif;
         }
+
+        table,
+        th,
+        td {
+                border: 1px solid white;
+                border-collapse: collapse;
+        }
+
+        th,
+        td {
+                background-color: #96D4D4;
+        }
 </style>
 
 <body>
@@ -53,8 +65,17 @@
                                 <button id="show" onClick="showDecisionTree()" class="btn btn-md btn-primary">Show
                                         tree</button>
 
-                        </div>
+                        </div><br />
+                        <div class="row">
+                                <div id="tableDiv" class="col col-md-7">
 
+                                </div> 
+                                <div id="svgDiv" class="col col-md-3">
+
+                                </div> 
+                        
+                        </div>
+                
                 </div>
         </div>
 
@@ -67,14 +88,13 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 
 
-
         <script>
 
                 var data = {
-                        "name": "Outlook -> Rainy | Overcast | Sunny",
+                        "name": "Outlook -> Rainy|Overcast|Sunny",
                         "children": [
                                 {
-                                        "name": "Windy -> True | False",
+                                        "name": "Windy -> True|False",
                                         "rule": "Rainy",
                                         "children": [
                                                 {
@@ -92,7 +112,7 @@
                                         "rule": "Overcast"
                                 },
                                 {
-                                        "name": "Humidity -> Normal | High",
+                                        "name": "Humidity -> Normal|High",
                                         "rule": "Sunny",
                                         "children": [
                                                 {
@@ -107,6 +127,62 @@
                                 }
                         ]
                 }
+
+                //create table
+                var weather_array = [
+                        ['outlook', 'temp', 'humidity', 'windy', 'play'],
+                        ["sunny", "hot", "high", "false", "no"],
+                        ["sunny", "hot", "high", "true", "no"],
+                        ["overcast", "hot", "high", "false", "yes"],
+                        ["rainy", "mild", "high", "false", "yes"],
+                        ["rainy", "cool", "normal", "false", "yes"],
+                        ["rainy", "cool", "normal", "true", "no"],
+                        ["overcast", "cool", "normal", "true", "yes"],
+                        ["sunny", "mild", "high", "false", "no"],
+                        ["sunny", "cool", "normal", "false", "yes"],
+                        ["rainy", "mild", "normal", "false", "yes"],
+                        ["sunny", "mild", "normal", "true", "yes"],
+                        ["overcast", "mild", "high", "true", "yes"],
+                        ["overcast", "hot", "normal", "false", "yes"],
+                        ["overcast", "hot", "normal", "false", "yes"]
+                ];
+
+
+                var table = document.createElement('table');
+                table.setAttribute("class", "table table-striped");
+                table.setAttribute("width", "200px")
+                table.setAttribute("border", " 1px solid white");
+                table.setAttribute("border-collapse", "collapse");
+                table.setAttribute("background-color", "#96D4D4");
+                document.getElementById("tableDiv").appendChild(table) // Drew the main table node on the document
+
+                for (var i = 0; i < 15; i++) {
+                        if (i === 0) {
+                                var thead = document.createElement('thead'); //Create 3 <tr> elements assigned to a unique variable BUT need a working alternative for 'tr[i]'
+                                thead.setAttribute("id", "thead")
+                                table.appendChild(thead); // Append to <table> node
+                        }
+                        else {
+                                var tr = document.createElement('tr'); //Create 3 <tr> elements assigned to a unique variable BUT need a working alternative for 'tr[i]'
+                                table.appendChild(tr); // Append to <table> node
+                        }
+
+                        for (var j = 0; j < 5; j++) {
+                                if (i === 0) {
+                                        var tdElement = document.createElement('th');
+                                        tdElement.innerHTML = weather_array[i][j];
+                                        document.getElementById("thead").appendChild(tdElement);
+                                }
+                                else {
+                                        var tdElement = document.createElement('td');
+                                        tdElement.innerHTML = weather_array[i][j];
+                                        tr.appendChild(tdElement); // Take string from placeholder variable and append it to <tr> node
+                                }
+
+                        }
+                }
+
+
 
                 //load data from file
                 function loadData() {
@@ -131,7 +207,7 @@
 
                         var diagonal = d3.svg.diagonal().projection(function (d) { return [d.y, d.x]; });
 
-                        var svg = d3.select("body").append("svg")
+                        var svg = d3.select("#svgDiv").append("svg")
                                 .attr("width", width + margin.right + margin.left)
                                 .attr("height", height + margin.top + margin.bottom)
                                 .append("g")
@@ -217,7 +293,7 @@
                                 // Update the links…
                                 var link = svg.selectAll("path.link")
                                         .data(links, function (d) { return d.target.id; });
-          
+
                                 // Enter any new links at the parent's previous position.
                                 link.enter().insert("path", "g")
                                         .attr("class", "link")
@@ -275,13 +351,6 @@
                         }
 
                 }
-
-
-
-
-
-
-
 
 
         </script>
