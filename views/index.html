@@ -52,30 +52,55 @@
 </style>
 
 <body>
-        <div >
+        <div>
                 <div class="row">
-                        <br/>
+                        <br />
                         <div class="col col-md-3">
                                 <h2>D3 Decision tree demo</h1>
+                                        <div id="tableDiv">
+
+                                        </div>
                         </div>
-                        <div class="col col-md-2">
-                                <button id="show" onClick="showDecisionTree()" class="btn btn-md btn-primary">Show
-                                        tree</button>
+
+                        <div class="col col-md-9">
+                                <div class="row">
+
+                                        <div class="col col-md-4">
+                                                <h4><b>Calculate prediction:</b></h4>
+                                                <h5>{Outlook: "Overcast"} -> YES</h5>
+                                                <h5>{Outlook: "Rainy", Windy: True} -> NO</h5>
+                                                <h5>{Outlook: "Rainy", Windy: False} -> YES</h5>
+                                                <h5>{Outlook: "Sunny", Humidity: "Normal"} -> YES</h5>
+                                                <h5>{Outlook: "Sunny", Humidity: "High"} -> NO</h5>
+                                        </div>
+                                        <div class="col col-md-2">
+                                                <button id="show" onClick="showDecisionTree()"
+                                                        class="btn btn-md btn-primary">Show
+                                                        tree</button>
+                                        </div>
+
+                                </div>
+                                <div class="row">
+
+                                        <div id="svgDiv" class="col col-md-7">
+
+                                        </div>
+                                </div>
+
+
+
                         </div>
+
+
 
                 </div>
-                <br/>
+                <br />
                 <div>
                         <div class="row">
-                                <div id="tableDiv" class="col col-md-3">
 
-                                </div> 
-                                <div id="svgDiv" class="col col-md-7">
 
-                                </div> 
-                        
                         </div>
-                
+
                 </div>
         </div>
 
@@ -91,10 +116,11 @@
         <script>
 
                 var data = {
-                        "name": "Outlook -> Rainy|Overcast|Sunny",
+                        "name": "Outlook -> Rainy | Overcast | Sunny",
+                        "rule": null,
                         "children": [
                                 {
-                                        "name": "Windy -> True|False",
+                                        "name": "Windy -> True | False",
                                         "rule": "Rainy",
                                         "children": [
                                                 {
@@ -112,7 +138,7 @@
                                         "rule": "Overcast"
                                 },
                                 {
-                                        "name": "Humidity -> Normal|High",
+                                        "name": "Humidity -> Normal | High",
                                         "rule": "Sunny",
                                         "children": [
                                                 {
@@ -354,6 +380,8 @@
 
 
         </script>
+
+
 
 </body>
 
